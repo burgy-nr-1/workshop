@@ -1,0 +1,21 @@
+<article class="demo-card notification-card">
+  <div class="demo-kicker">Inbox simulator</div>
+  <div class="counter-display">
+    <span class="label">Unread notifications</span>
+    <strong data-testid="count">{{ count() }}</strong>
+  </div>
+  <p>An incoming message arrives asynchronously after each request.</p>
+  <div class="demo-actions">
+    <button
+      class="primary-button"
+      type="button"
+      data-testid="increment"
+      (click)="receiveNotification()"
+    >
+      Receive notification
+    </button>
+    <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
+      Reset
+    </button>
+  </div>
+</article>

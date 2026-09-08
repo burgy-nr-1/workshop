@@ -1,0 +1,35 @@
+<article class="demo-card task-list-card">
+  <div class="demo-card-heading">
+    <div>
+      <span class="demo-kicker">Current sprint</span>
+      <h3>Sprint tasks</h3>
+    </div>
+    <strong class="count-pill" data-testid="completed-count"
+      >{{ completedCount() }} / {{ tasks().length }}</strong
+    >
+  </div>
+  <ul class="task-list">
+    @for (task of tasks(); track task.id) {
+      <li>
+        <button
+          type="button"
+          class="task-toggle"
+          [attr.data-testid]="'toggle-' + task.id"
+          (click)="toggle(task.id)"
+        >
+          <span aria-hidden="true">{{ task.completed ? '✓' : '○' }}</span>
+          <span [class.completed]="task.completed">{{ task.title }}</span>
+          <span class="sr-only">Toggle {{ task.title }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+  <div class="demo-actions">
+    <button class="secondary-button" type="button" data-testid="add-task" (click)="addTask()">
+      Add task
+    </button>
+    <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
+      Reset
+    </button>
+  </div>
+</article>

@@ -1,0 +1,37 @@
+<article class="demo-card filter-card">
+  <div class="demo-card-heading">
+    <div>
+      <span class="demo-kicker">Team board</span>
+      <h3>Delivery tasks</h3>
+    </div>
+    <span class="count-pill" data-testid="visible-count">{{ filteredTasks().length }} shown</span>
+  </div>
+  <div class="segmented-control" aria-label="Filter tasks">
+    @for (option of ['all', 'open', 'done']; track option) {
+      <button
+        type="button"
+        [class.active]="filter === option"
+        [attr.data-testid]="'filter-' + option"
+        (click)="setFilter($any(option))"
+      >
+        {{ option }}
+      </button>
+    }
+  </div>
+  <ul class="task-list" data-testid="filtered-list">
+    @for (task of filteredTasks(); track task.id) {
+      <li class="filter-row">
+        <span aria-hidden="true">{{ task.done ? '✓' : '○' }}</span
+        ><span>{{ task.title }}</span>
+      </li>
+    }
+  </ul>
+  <div class="demo-actions">
+    <button class="secondary-button" type="button" data-testid="add-open" (click)="addOpenTask()">
+      Add open task
+    </button>
+    <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
+      Reset
+    </button>
+  </div>
+</article>

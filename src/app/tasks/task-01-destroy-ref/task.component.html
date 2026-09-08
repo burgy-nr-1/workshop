@@ -1,0 +1,24 @@
+<article class="demo-card customer-card">
+  <div class="demo-kicker">Customer profile</div>
+  <div class="person-row">
+    <span class="avatar" aria-hidden="true">AS</span>
+    <div>
+      <h3>Anna Schmidt</h3>
+      <p>Developer</p>
+    </div>
+  </div>
+  <dl class="demo-details">
+    <div>
+      <dt>Team</dt>
+      <dd>Platform</dd>
+    </div>
+    <div>
+      <dt>Heartbeat</dt>
+      <dd>{{ lastHeartbeat }}</dd>
+    </div>
+  </dl>
+  <button class="primary-button" type="button" data-testid="save" (click)="save()">
+    Save changes
+  </button>
+  <p class="demo-status" data-testid="save-status" aria-live="polite">{{ saveStatus }}</p>
+</article>

@@ -1,0 +1,66 @@
+<article class="demo-card people-dashboard">
+  <div class="demo-card-heading">
+    <div>
+      <span class="demo-kicker">Project team</span>
+      <h3>People dashboard</h3>
+    </div>
+    <strong class="count-pill" data-testid="active-count">{{ activeUsers.length }} active</strong>
+  </div>
+
+  @if (loading) {
+    <div class="loading-row" data-testid="loading">Loading team…</div>
+  } @else {
+    <label class="search-field">
+      <span>Find an active team member</span>
+      <input
+        #search
+        type="search"
+        [value]="searchTerm"
+        (input)="updateSearch(search.value)"
+        placeholder="Search by name"
+      />
+    </label>
+
+    <div class="people-layout">
+      <div class="people-list" data-testid="user-list">
+        @for (user of visibleUsers; track user.id) {
+          <button
+            type="button"
+            [class.selected]="selectedUser?.id === user.id"
+            [attr.data-testid]="'user-' + user.id"
+            (click)="select(user)"
+          >
+            <span class="avatar" aria-hidden="true"
+              >{{ user.name[0] }}{{ user.name.split(' ')[1][0] }}</span
+            >
+            <span
+              ><strong>{{ user.name }}</strong
+              ><small>{{ user.role }}</small></span
+            >
+          </button>
+        } @empty {
+          <p class="empty-state">No active team members found.</p>
+        }
+      </div>
+
+      @if (selectedUser; as selected) {
+        <section class="selected-person" aria-label="Selected team member">
+          <span class="label">Selected</span>
+          <h4>{{ selected.name }}</h4>
+          <p>{{ selected.role }}</p>
+          <span class="status-dot" [class.inactive]="!selected.active">
+            {{ selected.active ? 'Active' : 'Inactive' }}
+          </span>
+          <button
+            class="secondary-button"
+            type="button"
+            data-testid="toggle-active"
+            (click)="toggleSelectedStatus()"
+          >
+            Toggle active status
+          </button>
+        </section>
+      }
+    </div>
+  }
+</article>

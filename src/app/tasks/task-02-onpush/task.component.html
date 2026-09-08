@@ -1,0 +1,12 @@
+<article class="demo-card">
+  <app-user-card [user]="user" />
+  <div class="demo-actions">
+    <button class="primary-button" type="button" data-testid="promote" (click)="promote()">
+      Promote to Admin
+    </button>
+    <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
+      Reset
+    </button>
+  </div>
+  <p class="demo-status" aria-live="polite">{{ requestStatus }}</p>
+</article>
