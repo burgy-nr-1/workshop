@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
         <span class="brand-mark" aria-hidden="true">A22</span>
         <span>
           <strong>Tech &amp; Learn</strong>
-          <small>euregon development</small>
+          <small>burgy development</small>
         </span>
       </a>
       <div class="header-topic">
