@@ -64,7 +64,8 @@ export class TaskCheckerService {
     }
 
     reset.click();
-    const initial = await this.waitForText(root, 'role', 'Benutzer');
+    await this.waitForRenderCycle();
+    const initial = this.text(root, 'role');
     promote.click();
     const promoted = await this.waitForText(root, 'role', 'Administrator');
     reset.click();
@@ -271,6 +272,10 @@ export class TaskCheckerService {
 
       observer.observe(root, { characterData: true, childList: true, subtree: true });
     });
+  }
+
+  private waitForRenderCycle(): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve));
   }
 
   private success(): TaskCheckResult {
