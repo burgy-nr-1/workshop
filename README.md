@@ -1,6 +1,6 @@
 # Angular 22 — OnPush, Zoneless & Signals
 
-Interaktiver Tech-&-Learn-Coding-Workshop zu modernen Angular-Architekturen. Sieben unabhängige Debugging- und Refactoring-Aufgaben vermitteln das Reaktivitätsmodell von Angular 22 anhand von beobachtbarem Anwendungsverhalten.
+Interaktiver Tech-&-Learn-Coding-Workshop zu modernen Angular-Architekturen. Sechs unabhängige Debugging- und Refactoring-Aufgaben vermitteln das Reaktivitätsmodell von Angular 22 anhand von beobachtbarem Anwendungsverhalten.
 
 ## Für Teilnehmende
 
@@ -26,10 +26,11 @@ Danach `http://localhost:4200/` öffnen.
 
 ```bash
 npm test
+npm run test:solutions
 npm run build
 ```
 
-Die Standard-Suite verwendet den Vitest-Runner der Angular CLI und bleibt auch mit den absichtlich fehlerhaften Starter-Aufgaben grün. Die Referenzlösungen werden separat geprüft.
+Die Standard-Suite verwendet den Vitest-Runner der Angular CLI und bleibt auch mit den absichtlich fehlerhaften Starter-Aufgaben grün. `test:solutions` überlagert die Starter in einem temporären Workspace mit allen Referenzlösungen, baut die Anwendung und führt jeden Runtime-Check aus.
 
 ## Workshop-Inhalte
 

@@ -1,6 +1,8 @@
 # Referenzlösungen für Workshop-Autorinnen und -Autoren
 
-Diese Dateien liegen außerhalb des kompilierten Angular-Source-Trees und sind nicht in der Oberfläche verlinkt. Auf einem separaten `solutions`-Branch die Dateien jeder Aufgabe über die gleichnamigen Dateien unter `src/app/tasks/` kopieren und anschließend `npm test` sowie `npm run build` ausführen.
+Diese Dateien liegen außerhalb des kompilierten Angular-Source-Trees und sind nicht in der Oberfläche verlinkt. Auf einem separaten `solutions`-Branch die Dateien jeder Aufgabe über die gleichnamigen Dateien unter `src/app/tasks/` kopieren.
+
+`npm run test:solutions` erledigt diese Überlagerung ohne Änderung des Arbeitsbaums in einem temporären Workspace, baut alle Referenzlösungen und führt ihre Runtime-Checks aus.
 
 ## Aufgabe 01
 
@@ -12,7 +14,7 @@ Die Mutation durch eine neue Referenz ersetzen: `this.user = { ...this.user, rol
 
 ## Aufgabe 03
 
-`count` zu `signal(0)` machen, im Template mit `count()` lesen, im Callback `count.update(count => count + 1)` und beim Reset `count.set(0)` verwenden.
+`count` zu `signal(0)` machen, im Template mit `count()` lesen, im Timer-Callback `count.update(count => count + 1)` und beim Reset `count.set(0)` verwenden. Das Signal meldet die Änderung aus der Async-Grenze an Angular; ZoneJS oder manuelle Change Detection sind unnötig.
 
 ## Aufgabe 04
 
@@ -23,10 +25,6 @@ Die Mutation durch eine neue Referenz ersetzen: `this.user = { ...this.user, rol
 `filteredTasks` als `computed()` modellieren, das `tasks()` und `filter()` synchron liest. Den Constructor-`effect()` vollständig entfernen: Er synchronisiert Derived State, liest nach `await` ungetrackt und liest/setzt dasselbe Signal.
 
 ## Aufgabe 06
-
-`status` als Signal modellieren, im Template aufrufen und im Callback sowie beim Reset mit `set()` aktualisieren. Der normale Browser-Timer bleibt erhalten; das Signal-Update benachrichtigt Angular.
-
-## Aufgabe 07
 
 Das Service-Observable beibehalten und mit `toSignal()` oder `takeUntilDestroyed()` an der Async-Grenze anbinden. Auswahl und Suche werden Signals, aktive und sichtbare Personen `computed()`. Statusänderungen ersetzen Nutzer immutable. `ChangeDetectorRef`, kopierte Collections und Cleanup-Subscription entfallen; die Komponente verwendet OnPush.
 

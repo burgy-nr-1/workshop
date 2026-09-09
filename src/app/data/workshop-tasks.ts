@@ -10,7 +10,7 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     category: 'Debugging',
     concept: 'takeUntilDestroyed & Injection Context',
     difficulty: 'Mittel',
-    estimatedMinutes: '7 Min.',
+    estimatedMinutes: '8–12 Min.',
     filePath: 'src/app/tasks/task-01-destroy-ref/task.component.ts',
     problem:
       'Der Speichern-Button soll das Formular sichern. Die Seite bricht jedoch schon vorher ab. Finde die eigentliche Ursache.',
@@ -36,8 +36,8 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     subtitle: 'Eine Mutation fand statt. Eine neue Input-Referenz nicht.',
     category: 'Change Detection',
     concept: 'OnPush · Input- und Output-Signale',
-    difficulty: 'Mittel',
-    estimatedMinutes: '8 Min.',
+    difficulty: 'Einfach',
+    estimatedMinutes: '5–7 Min.',
     filePath: 'src/app/tasks/task-02-onpush/task.component.ts',
     problem:
       'Nach der Migration des Childs von Eager auf OnPush läuft der Handler, die Profilkarte zeigt aber weiterhin die alte Rolle. Das Child verwendet bereits input() und output().',
@@ -60,26 +60,27 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     number: 3,
     slug: '03-signals',
     title: 'Zustand reaktiv machen',
-    subtitle: 'Der Zustand ändert sich nach dem Event, die View bleibt zurück.',
+    subtitle: 'Der Async-Callback läuft, die zoneless View bleibt zurück.',
     category: 'Signals',
-    concept: 'signal() & schreibbarer Zustand',
+    concept: 'signal() · schreibbarer Zustand · Zoneless',
     difficulty: 'Einfach',
-    estimatedMinutes: '6 Min.',
+    estimatedMinutes: '6–8 Min.',
     filePath: 'src/app/tasks/task-03-signals/task.component.ts',
     problem:
       'Eingehende Benachrichtigungen aktualisieren asynchron ein normales Feld. In der zoneless App bleibt der sichtbare Zähler veraltet.',
     goal: 'Der Zähler zeigt jedes Inkrement und jeden Reset zuverlässig an.',
     constraints: [
-      'Die asynchrone Simulation bleibt erhalten.',
+      'Der Browser-Timer als Async-Grenze bleibt erhalten.',
+      'ZoneJS darf nicht hinzugefügt werden.',
       'Nutze Angular-Zustandsprimitive statt manueller Change Detection.',
       'Inkrement und Reset müssen weiterhin funktionieren.',
     ],
     hints: [
-      'Welcher Wert ist hier schreibbarer reaktiver Zustand?',
+      'Der Click-Handler startet nur den Timer. Wer benachrichtigt Angular nach dem späteren Callback?',
       'Ein Signal wird mit () gelesen und mit set() oder update() geändert.',
     ],
     successExplanation:
-      'Schreibbare Signals halten Zustand und benachrichtigen Angular über template-relevante Änderungen. set() ersetzt einen Wert, update() leitet den nächsten Wert vom aktuellen ab.',
+      'Das schreibbare Signal hält den Zustand und benachrichtigt Angular auch aus dem späteren Browser-Callback. set() ersetzt einen Wert, update() leitet den nächsten Wert vom aktuellen ab; ZoneJS und manuelle Change Detection bleiben unnötig.',
   },
   {
     id: 'task-04',
@@ -90,7 +91,7 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     category: 'Signals',
     concept: 'computed() · immutable Listen-Updates',
     difficulty: 'Mittel',
-    estimatedMinutes: '10 Min.',
+    estimatedMinutes: '10–15 Min.',
     filePath: 'src/app/tasks/task-04-computed/task.component.ts',
     problem:
       'Die Todo-Liste wird mit push() und Objektmutation verändert. Weil Signals standardmäßig mit Object.is vergleichen, bleibt die Ableitung veraltet.',
@@ -116,8 +117,8 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     subtitle: 'Abgeleiteter Zustand gehört in den reaktiven Graphen.',
     category: 'Reaktive Architektur',
     concept: 'effect() · async Tracking · computed()',
-    difficulty: 'Mittel',
-    estimatedMinutes: '10 Min.',
+    difficulty: 'Anspruchsvoll',
+    estimatedMinutes: '10–15 Min.',
     filePath: 'src/app/tasks/task-05-effect/task.component.ts',
     problem:
       'Der effect() im Constructor liest und setzt dasselbe Filter-Signal nach einem await. Filterwechsel bleiben deshalb ungetrackt; außerdem wird abgeleiteter Zustand manuell synchronisiert.',
@@ -129,7 +130,7 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     ],
     hints: [
       'Signal-Lesezugriffe nach einer Async-Grenze werden vom effect() nicht als Dependency erfasst.',
-      'Ist das eine externe Side Effect – oder lediglich eine synchrone Ableitung?',
+      'Ist das ein externer Side Effect – oder lediglich eine synchrone Ableitung?',
     ],
     successExplanation:
       'computed() liest beide Source-Signals synchron und liefert den abgeleiteten Wert direkt. effect() bleibt echten Side Effects vorbehalten; Signal-Lesezugriffe nach await werden nicht getrackt.',
@@ -137,39 +138,14 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
   {
     id: 'task-06',
     number: 6,
-    slug: '06-zoneless',
-    title: 'JavaScript änderte sich. Angular wusste nichts davon.',
-    subtitle: 'Der Callback lief, aber die Benachrichtigung fehlte.',
-    category: 'Change Detection',
-    concept: 'Zoneless-Benachrichtigungen',
-    difficulty: 'Mittel',
-    estimatedMinutes: '8 Min.',
-    filePath: 'src/app/tasks/task-06-zoneless/task.component.ts',
-    problem: 'Ein browsernaher Callback ist fertig, aber der sichtbare Sync-Status bleibt stehen.',
-    goal: 'Nach dem Start zeigt die UI ohne fremdes Event zuverlässig „Bereit“ an.',
-    constraints: [
-      'ZoneJS darf nicht hinzugefügt werden.',
-      'Kein detectChanges().',
-      'Der asynchrone Callback bleibt erhalten.',
-    ],
-    hints: [
-      'Der Callback läuft. Prüfe das in der Browser-Konsole.',
-      'Wodurch erfährt Angular, dass sich template-relevanter Zustand geändert hat?',
-    ],
-    successExplanation:
-      'Zoneless Angular braucht eine gezielte Benachrichtigung. Ein Update eines im Template gelesenen Signals liefert sie; auch Inputs, Angular-Listener, AsyncPipe, setInput() und markForCheck() sind gültige Pfade.',
-  },
-  {
-    id: 'task-07',
-    number: 7,
-    slug: '07-modernize',
+    slug: '06-modernize',
     title: 'Diese Komponente modernisieren',
     subtitle: 'Jetzt greifen alle Bausteine ineinander.',
     category: 'Migration',
     concept: 'Eager → OnPush · Signals + RxJS',
     difficulty: 'Anspruchsvoll',
-    estimatedMinutes: '15 Min.',
-    filePath: 'src/app/tasks/task-07-modernize/task.component.ts',
+    estimatedMinutes: '20–30 Min.',
+    filePath: 'src/app/tasks/task-06-modernize/task.component.ts',
     problem:
       'Die durch ng update zunächst auf Eager belassene Komponente mischt Subscriptions, kopierten Zustand, Mutation, manuelles Cleanup und erzwungene Change Detection.',
     goal: 'Migriere schrittweise auf OnPush: Laden, Auswahl, Suche und abgeleitete Listen bleiben ohne erzwungene Change Detection korrekt.',
@@ -183,6 +159,7 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     hints: [
       'Trenne Async-Stream, schreibbaren UI-Zustand und synchrone Ableitungen.',
       'toSignal() oder takeUntilDestroyed() bilden eine saubere RxJS-Grenze; computed() beschreibt gefilterte Views.',
+      'Prüfe bei echten Migrationen außerdem direkte Input-Zuweisungen, NgZone.onStable und Tests, die fehlende Benachrichtigungen mit detectChanges() verdecken.',
     ],
     successExplanation:
       'OnPush begrenzt den zu prüfenden Teilbaum, Signals melden relevante Änderungen und computed() hält Ableitungen konsistent. RxJS bleibt stark für Streams, Cancellation, Komposition, Debouncing und WebSockets.',

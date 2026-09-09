@@ -4,33 +4,36 @@
       <span class="demo-kicker">Projektteam</span>
       <h3>Team-Dashboard</h3>
     </div>
-    <strong class="count-pill" data-testid="active-count">{{ activeUsers().length }} aktiv</strong>
+    <strong class="count-pill" data-testid="active-count">{{ activeUsers.length }} aktiv</strong>
   </div>
-  @if (loading()) {
+
+  @if (loading) {
     <div class="loading-row" data-testid="loading">Team wird geladen…</div>
   } @else {
     <label class="search-field">
       <span>Aktives Teammitglied finden</span>
       <input
         #search
+        data-testid="search"
         type="search"
-        [value]="searchTerm()"
+        [value]="searchTerm"
         (input)="updateSearch(search.value)"
         placeholder="Nach Name suchen"
       />
     </label>
+
     <div class="people-layout">
       <div class="people-list" data-testid="user-list">
-        @for (user of visibleUsers(); track user.id) {
+        @for (user of visibleUsers; track user.id) {
           <button
             type="button"
-            [class.selected]="selectedUser()?.id === user.id"
+            [class.selected]="selectedUser?.id === user.id"
             [attr.data-testid]="'user-' + user.id"
             (click)="select(user)"
           >
-            <span class="avatar" aria-hidden="true">
-              {{ user.name[0] }}{{ user.name.split(' ')[1][0] }}
-            </span>
+            <span class="avatar" aria-hidden="true"
+              >{{ user.name[0] }}{{ user.name.split(' ')[1][0] }}</span
+            >
             <span
               ><strong>{{ user.name }}</strong
               ><small>{{ user.role }}</small></span
@@ -40,12 +43,17 @@
           <p class="empty-state">Keine aktiven Teammitglieder gefunden.</p>
         }
       </div>
-      @if (selectedUser(); as selected) {
+
+      @if (selectedUser; as selected) {
         <section class="selected-person" aria-label="Ausgewähltes Teammitglied">
           <span class="label">Ausgewählt</span>
-          <h4>{{ selected.name }}</h4>
+          <h4 data-testid="selected-name">{{ selected.name }}</h4>
           <p>{{ selected.role }}</p>
-          <span class="status-dot" [class.inactive]="!selected.active">
+          <span
+            class="status-dot"
+            data-testid="selected-status"
+            [class.inactive]="!selected.active"
+          >
             {{ selected.active ? 'Aktiv' : 'Inaktiv' }}
           </span>
           <button

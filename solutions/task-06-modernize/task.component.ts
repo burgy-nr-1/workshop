@@ -4,14 +4,14 @@ import { UserService, WorkshopUser } from './user.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-task-07',
+  selector: 'app-task-06',
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
 })
-export class Task07Component {
+export class Task06Component {
   private readonly userService = inject(UserService);
   protected readonly users = signal<WorkshopUser[]>([]);
-  protected readonly selectedUserId = signal<number | undefined>(1);
+  protected readonly selectedUserId = signal<number | undefined>(undefined);
   protected readonly searchTerm = signal('');
   protected readonly loading = signal(true);
   protected readonly activeUsers = computed(() => this.users().filter((user) => user.active));
@@ -29,6 +29,7 @@ export class Task07Component {
       .pipe(takeUntilDestroyed())
       .subscribe((users) => {
         this.users.set(users);
+        this.selectedUserId.set(users.find((user) => user.active)?.id);
         this.loading.set(false);
       });
   }

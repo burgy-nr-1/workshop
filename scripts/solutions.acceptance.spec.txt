@@ -1,0 +1,32 @@
+import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { TaskCheckerService } from './shared/task-checker/task-checker.service';
+import { Task01Component } from './tasks/task-01-destroy-ref/task.component';
+import { Task02Component } from './tasks/task-02-onpush/task.component';
+import { Task03Component } from './tasks/task-03-signals/task.component';
+import { Task04Component } from './tasks/task-04-computed/task.component';
+import { Task05Component } from './tasks/task-05-effect/task.component';
+import { Task06Component } from './tasks/task-06-modernize/task.component';
+
+const CASES: readonly [string, Type<unknown>][] = [
+  ['task-01', Task01Component],
+  ['task-02', Task02Component],
+  ['task-03', Task03Component],
+  ['task-04', Task04Component],
+  ['task-05', Task05Component],
+  ['task-06', Task06Component],
+];
+
+describe('Referenzlösungen', () => {
+  for (const [taskId, component] of CASES) {
+    it(`${taskId} besteht den Runtime-Check`, async () => {
+      const fixture = TestBed.createComponent(component);
+      fixture.detectChanges();
+
+      const result = await new TaskCheckerService().check(taskId, fixture.nativeElement, false);
+
+      expect(result).toEqual(expect.objectContaining({ passed: true }));
+      fixture.destroy();
+    });
+  }
+});

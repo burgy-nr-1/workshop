@@ -11,11 +11,11 @@ import { UserService, WorkshopUser } from './user.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Eager,
-  selector: 'app-task-07',
+  selector: 'app-task-06',
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
 })
-export class Task07Component implements OnInit, OnDestroy {
+export class Task06Component implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly subscriptions = new Subscription();

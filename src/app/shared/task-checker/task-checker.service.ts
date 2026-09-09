@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TaskCheckResult } from './task-checker.types';
 
-const pause = (milliseconds: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
-
 @Injectable({ providedIn: 'root' })
 export class TaskCheckerService {
   public async check(
@@ -12,10 +9,15 @@ export class TaskCheckerService {
     initializationFailed: boolean,
   ): Promise<TaskCheckResult> {
     if (initializationFailed) {
-      return this.failure(
-        'Die Aufgabe scheitert noch bei der Initialisierung.',
-        'Öffne die Browser-Konsole und prüfe den ersten Angular-Fehler. Der Speichern-Handler ist nicht die erste Ursache.',
-      );
+      return taskId === 'task-01'
+        ? this.failure(
+            'Die Aufgabe scheitert noch bei der Initialisierung.',
+            'Öffne die Browser-Konsole und prüfe den ersten Angular-Fehler. Der Speichern-Handler ist nicht die erste Ursache.',
+          )
+        : this.failure(
+            'Das Live-Beispiel scheitert bei der Initialisierung.',
+            'Öffne die Browser-Konsole und prüfe den ersten Angular-Fehler in der bearbeiteten Aufgabe.',
+          );
     }
 
     switch (taskId) {
@@ -31,8 +33,6 @@ export class TaskCheckerService {
         return this.checkTask05(root);
       case 'task-06':
         return this.checkTask06(root);
-      case 'task-07':
-        return this.checkTask07(root);
       default:
         return this.failure(
           'Für diese Aufgabe gibt es keinen Check.',
@@ -45,8 +45,8 @@ export class TaskCheckerService {
     const save = this.button(root, 'save');
     if (!save) return this.missingDemo();
     save.click();
-    await pause(30);
-    return this.text(root, 'save-status') === 'Änderungen gespeichert'
+    const status = await this.waitForText(root, 'save-status', 'Änderungen gespeichert');
+    return status === 'Änderungen gespeichert'
       ? this.success()
       : this.failure(
           'Speichern wurde nicht abgeschlossen.',
@@ -55,18 +55,27 @@ export class TaskCheckerService {
   }
 
   private async checkTask02(root: HTMLElement): Promise<TaskCheckResult> {
-    this.button(root, 'reset')?.click();
-    await pause(30);
-    const initial = this.text(root, 'role');
-    this.button(root, 'promote')?.click();
-    await pause(40);
-    const promoted = this.text(root, 'role');
-    return initial === 'Benutzer' && promoted === 'Administrator'
+    const reset = this.button(root, 'reset');
+    const promote = this.button(root, 'promote');
+    if (!reset || !promote) return this.missingDemo();
+
+    reset.click();
+    const initial = await this.waitForText(root, 'role', 'Benutzer');
+    promote.click();
+    const promoted = await this.waitForText(root, 'role', 'Administrator');
+    reset.click();
+    const resetRole = await this.waitForText(root, 'role', 'Benutzer');
+
+    return initial === 'Benutzer' && promoted === 'Administrator' && resetRole === 'Benutzer'
       ? this.success()
       : this.failure(
-          'Das Child zeigt weiterhin „Benutzer“ an.',
-          'Der Handler lief, aber die Child-View erhielt nicht die Änderung, auf die OnPush achtet.',
-          [`Ausgangsrolle: ${initial || 'fehlt'}`, `Nach der Änderung: ${promoted || 'fehlt'}`],
+          'Rollenänderung oder Reset erreicht das Child noch nicht zuverlässig.',
+          'Neue Input-Referenz und Reset-Output müssen beide die gerenderte Rolle aktualisieren.',
+          [
+            `Ausgangsrolle: ${initial || 'fehlt'}`,
+            `Nach der Änderung: ${promoted || 'fehlt'}`,
+            `Nach dem Reset: ${resetRole || 'fehlt'}`,
+          ],
         );
   }
 
@@ -76,20 +85,15 @@ export class TaskCheckerService {
     if (!increment || !reset) return this.missingDemo();
 
     reset.click();
-    await pause(30);
-    const observed = [this.text(root, 'count')];
+    const observed = [await this.waitForText(root, 'count', '0')];
     increment.click();
-    await pause(90);
-    observed.push(this.text(root, 'count'));
+    observed.push(await this.waitForText(root, 'count', '1'));
     increment.click();
-    await pause(90);
-    observed.push(this.text(root, 'count'));
+    observed.push(await this.waitForText(root, 'count', '2'));
     reset.click();
-    await pause(30);
-    observed.push(this.text(root, 'count'));
+    observed.push(await this.waitForText(root, 'count', '0'));
     increment.click();
-    await pause(90);
-    observed.push(this.text(root, 'count'));
+    observed.push(await this.waitForText(root, 'count', '1'));
 
     const expected = ['0', '1', '2', '0', '1'];
     return observed.every((value, index) => value === expected[index])
@@ -103,17 +107,13 @@ export class TaskCheckerService {
 
   private async checkTask04(root: HTMLElement): Promise<TaskCheckResult> {
     this.button(root, 'reset')?.click();
-    await pause(30);
-    const observed = [this.text(root, 'completed-count')];
+    const observed = [await this.waitForText(root, 'completed-count', '2 / 3')];
     this.button(root, 'toggle-2')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'completed-count'));
+    observed.push(await this.waitForText(root, 'completed-count', '3 / 3'));
     this.button(root, 'toggle-2')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'completed-count'));
+    observed.push(await this.waitForText(root, 'completed-count', '2 / 3'));
     this.button(root, 'add-task')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'completed-count'));
+    observed.push(await this.waitForText(root, 'completed-count', '2 / 4'));
     const expected = ['2 / 3', '3 / 3', '2 / 3', '2 / 4'];
 
     return observed.every((value, index) => value === expected[index])
@@ -127,20 +127,15 @@ export class TaskCheckerService {
 
   private async checkTask05(root: HTMLElement): Promise<TaskCheckResult> {
     this.button(root, 'reset')?.click();
-    await pause(40);
-    const observed = [this.text(root, 'visible-count')];
+    const observed = [await this.waitForText(root, 'visible-count', '3 angezeigt')];
     this.button(root, 'filter-done')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'visible-count'));
+    observed.push(await this.waitForText(root, 'visible-count', '2 angezeigt'));
     this.button(root, 'filter-open')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'visible-count'));
+    observed.push(await this.waitForText(root, 'visible-count', '1 angezeigt'));
     this.button(root, 'add-open')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'visible-count'));
+    observed.push(await this.waitForText(root, 'visible-count', '2 angezeigt'));
     this.button(root, 'filter-done')?.click();
-    await pause(30);
-    observed.push(this.text(root, 'visible-count'));
+    observed.push(await this.waitForText(root, 'visible-count', '2 angezeigt'));
     const expected = ['3 angezeigt', '2 angezeigt', '1 angezeigt', '2 angezeigt', '2 angezeigt'];
 
     return observed.every((value, index) => value === expected[index])
@@ -153,48 +148,63 @@ export class TaskCheckerService {
   }
 
   private async checkTask06(root: HTMLElement): Promise<TaskCheckResult> {
-    const start = this.button(root, 'start-sync');
-    if (!start) return this.missingDemo();
-    this.button(root, 'reset')?.click();
-    await pause(20);
-    start.click();
-    await pause(150);
-    const status = this.text(root, 'sync-status');
-    return status === 'Bereit'
-      ? this.success()
-      : this.failure(
-          'Der Callback ist fertig, aber die View wartet noch.',
-          'Behalte den Async-Mechanismus bei und benachrichtige Angular passend über den View-Zustand.',
-          [`Gerenderter Status: ${status || 'fehlt'}`],
-        );
-  }
+    await this.waitFor(root, () => !root.querySelector('[data-testid="loading"]'), 1000);
 
-  private async checkTask07(root: HTMLElement): Promise<TaskCheckResult> {
-    for (
-      let attempt = 0;
-      attempt < 10 && root.querySelector('[data-testid="loading"]');
-      attempt += 1
-    ) {
-      await pause(40);
-    }
+    const search = root.querySelector<HTMLInputElement>('[data-testid="search"]');
+    const toggle = this.button(root, 'toggle-active');
+    if (!search || !toggle) return this.missingDemo();
 
     const initial = this.text(root, 'active-count');
-    this.button(root, 'user-1')?.click();
-    await pause(20);
-    this.button(root, 'toggle-active')?.click();
-    await pause(40);
-    const afterToggle = this.text(root, 'active-count');
-    const visibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
+    const initialVisibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
 
-    return initial === '3 aktiv' && afterToggle === '2 aktiv' && visibleUsers === 2
+    search.value = 'Jonas';
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    await this.waitFor(
+      root,
+      () => root.querySelectorAll('button[data-testid^="user-"]').length === 1,
+    );
+    const searchResult = root.querySelectorAll('button[data-testid^="user-"]').length;
+    const searchFoundJonas = this.button(root, 'user-2') !== null;
+
+    search.value = '';
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    await this.waitFor(
+      root,
+      () => root.querySelectorAll('button[data-testid^="user-"]').length === 3,
+    );
+
+    this.button(root, 'user-2')?.click();
+    const selectedName = await this.waitForText(root, 'selected-name', 'Jonas Wolf');
+    this.button(root, 'toggle-active')?.click();
+    const afterToggle = await this.waitForText(root, 'active-count', '2 aktiv');
+    await this.waitFor(
+      root,
+      () => root.querySelectorAll('button[data-testid^="user-"]').length === 2,
+    );
+    const visibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
+    const selectedStatus = await this.waitForText(root, 'selected-status', 'Inaktiv');
+
+    return initial === '3 aktiv' &&
+      initialVisibleUsers === 3 &&
+      searchResult === 1 &&
+      searchFoundJonas &&
+      selectedName === 'Jonas Wolf' &&
+      afterToggle === '2 aktiv' &&
+      visibleUsers === 2 &&
+      selectedStatus === 'Inaktiv'
       ? this.success()
       : this.failure(
-          'Die Ansicht aktiver Teammitglieder ist noch kopierter Zustand.',
-          'Eine Änderung der Source of Truth muss jede Liste und jeden Zähler ohne manuelle Synchronisierung aktualisieren.',
+          'Mindestens ein Teil des Team-Dashboards bleibt veraltet.',
+          'Laden, Suche, Auswahl und Statusänderung müssen aus derselben Source of Truth reagieren.',
           [
             `Ausgangswert: ${initial || 'fehlt'}`,
+            `Anfangs sichtbare Personen: ${initialVisibleUsers}`,
+            `Suchtreffer für Jonas: ${searchResult}`,
+            `Jonas gefunden: ${searchFoundJonas ? 'ja' : 'nein'}`,
+            `Auswahl: ${selectedName || 'fehlt'}`,
             `Nach Statusänderung: ${afterToggle || 'fehlt'}`,
             `Sichtbare aktive Personen: ${visibleUsers}`,
+            `Ausgewählter Status: ${selectedStatus || 'fehlt'}`,
           ],
         );
   }
@@ -205,6 +215,40 @@ export class TaskCheckerService {
 
   private text(root: HTMLElement, testId: string): string {
     return root.querySelector(`[data-testid="${testId}"]`)?.textContent?.trim() ?? '';
+  }
+
+  private waitForText(
+    root: HTMLElement,
+    testId: string,
+    expected: string,
+    timeoutMilliseconds = 500,
+  ): Promise<string> {
+    return this.waitFor(root, () => this.text(root, testId) === expected, timeoutMilliseconds).then(
+      () => this.text(root, testId),
+    );
+  }
+
+  private waitFor(
+    root: HTMLElement,
+    condition: () => boolean,
+    timeoutMilliseconds = 500,
+  ): Promise<void> {
+    if (condition()) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (!condition()) return;
+        clearTimeout(timeout);
+        observer.disconnect();
+        resolve();
+      });
+      const timeout = setTimeout(() => {
+        observer.disconnect();
+        resolve();
+      }, timeoutMilliseconds);
+
+      observer.observe(root, { characterData: true, childList: true, subtree: true });
+    });
   }
 
   private success(): TaskCheckResult {

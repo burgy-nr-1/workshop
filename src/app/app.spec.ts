@@ -16,8 +16,8 @@ describe('Workshop-Anwendung', () => {
     expect(fixture.nativeElement.textContent).toContain('Angular 22');
   });
 
-  it('registriert sieben unabhängig routbare Aufgaben', () => {
-    expect(WORKSHOP_TASKS).toHaveLength(7);
-    expect(new Set(WORKSHOP_TASKS.map((task) => task.slug)).size).toBe(7);
+  it('registriert sechs unabhängig routbare Aufgaben', () => {
+    expect(WORKSHOP_TASKS).toHaveLength(6);
+    expect(new Set(WORKSHOP_TASKS.map((task) => task.slug)).size).toBe(6);
   });
 });
