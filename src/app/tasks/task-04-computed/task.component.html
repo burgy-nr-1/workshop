@@ -1,8 +1,8 @@
 <article class="demo-card task-list-card">
   <div class="demo-card-heading">
     <div>
-      <span class="demo-kicker">Current sprint</span>
-      <h3>Sprint tasks</h3>
+      <span class="demo-kicker">Aktueller Sprint</span>
+      <h3>Sprint-Aufgaben</h3>
     </div>
     <strong class="count-pill" data-testid="completed-count"
       >{{ completedCount() }} / {{ tasks().length }}</strong
@@ -19,17 +19,17 @@
         >
           <span aria-hidden="true">{{ task.completed ? '✓' : '○' }}</span>
           <span [class.completed]="task.completed">{{ task.title }}</span>
-          <span class="sr-only">Toggle {{ task.title }}</span>
+          <span class="sr-only">Status von {{ task.title }} umschalten</span>
         </button>
       </li>
     }
   </ul>
   <div class="demo-actions">
     <button class="secondary-button" type="button" data-testid="add-task" (click)="addTask()">
-      Add task
+      Aufgabe hinzufügen
     </button>
     <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
-      Reset
+      Zurücksetzen
     </button>
   </div>
 </article>

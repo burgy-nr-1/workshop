@@ -1,20 +1,20 @@
 <article class="demo-card sync-card">
-  <div class="demo-kicker">Workspace sync</div>
+  <div class="demo-kicker">Workspace-Synchronisierung</div>
   <div class="sync-visual" aria-hidden="true">
-    <span class="sync-node">Local</span><span class="sync-line"></span
-    ><span class="sync-node">Cloud</span>
+    <span class="sync-node">Lokal</span><span class="sync-line"></span>
+    <span class="sync-node">Cloud</span>
   </div>
   <div class="sync-status">
     <span>Status</span>
     <strong data-testid="sync-status" aria-live="polite">{{ status() }}</strong>
   </div>
-  <p>A browser callback reports when the local simulation is complete.</p>
+  <p>Ein Browser-Callback meldet den Abschluss der lokalen Simulation.</p>
   <div class="demo-actions">
     <button class="primary-button" type="button" data-testid="start-sync" (click)="startSync()">
-      Start sync
+      Synchronisierung starten
     </button>
     <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
-      Reset
+      Zurücksetzen
     </button>
   </div>
 </article>

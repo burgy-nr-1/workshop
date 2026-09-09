@@ -1,0 +1,38 @@
+.runner-surface {
+  margin-top: 24px;
+}
+
+.runner-error {
+  display: flex;
+  min-height: 340px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 30px;
+  border: 1px dashed rgb(255 122 130 / 42%);
+  border-radius: 12px;
+  background: rgb(255 122 130 / 5%);
+}
+
+.runner-error-icon {
+  display: grid;
+  width: 34px;
+  flex: 0 0 34px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 122 130 / 12%);
+  color: var(--danger);
+  font-weight: 800;
+}
+
+.runner-error h3 {
+  font-size: 16px;
+}
+
+.runner-error p {
+  max-width: 47ch;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}

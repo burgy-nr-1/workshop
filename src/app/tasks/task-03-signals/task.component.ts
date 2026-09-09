@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-03',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task03Component {
   protected count = 0;

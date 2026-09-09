@@ -1,4 +1,4 @@
-export type TaskDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
+export type TaskDifficulty = 'Einfach' | 'Mittel' | 'Anspruchsvoll';
 
 export interface WorkshopTask {
   id: string;

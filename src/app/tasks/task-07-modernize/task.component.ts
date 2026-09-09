@@ -1,10 +1,19 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService, WorkshopUser } from './user.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-task-07',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task07Component implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
@@ -18,7 +27,7 @@ export class Task07Component implements OnInit, OnDestroy {
   protected searchTerm = '';
   protected loading = false;
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loading = true;
 
     this.subscriptions.add(
@@ -33,7 +42,7 @@ export class Task07Component implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 

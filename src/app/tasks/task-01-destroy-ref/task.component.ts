@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-01',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task01Component implements OnInit {
-  protected lastHeartbeat = 0;
-  protected saveStatus = 'Not saved';
+  protected readonly lastHeartbeat = signal(0);
+  protected saveStatus = 'Noch nicht gespeichert';
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     interval(1000)
       .pipe(takeUntilDestroyed())
-      .subscribe((tick) => (this.lastHeartbeat = tick + 1));
+      .subscribe((tick) => this.lastHeartbeat.set(tick + 1));
   }
 
   protected save(): void {
-    this.saveStatus = 'Changes saved';
+    this.saveStatus = 'Änderungen gespeichert';
   }
 }

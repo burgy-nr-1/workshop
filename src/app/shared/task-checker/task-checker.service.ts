@@ -6,15 +6,15 @@ const pause = (milliseconds: number) =>
 
 @Injectable({ providedIn: 'root' })
 export class TaskCheckerService {
-  async check(
+  public async check(
     taskId: string,
     root: HTMLElement,
     initializationFailed: boolean,
   ): Promise<TaskCheckResult> {
     if (initializationFailed) {
       return this.failure(
-        'The exercise still fails during initialization.',
-        'Open the browser console and inspect the first Angular error. The Save handler is not the first failure.',
+        'Die Aufgabe scheitert noch bei der Initialisierung.',
+        'Öffne die Browser-Konsole und prüfe den ersten Angular-Fehler. Der Speichern-Handler ist nicht die erste Ursache.',
       );
     }
 
@@ -35,8 +35,8 @@ export class TaskCheckerService {
         return this.checkTask07(root);
       default:
         return this.failure(
-          'Checker unavailable.',
-          'Return to the challenge list and reopen this task.',
+          'Für diese Aufgabe gibt es keinen Check.',
+          'Kehre zur Übersicht zurück und öffne die Aufgabe erneut.',
         );
     }
   }
@@ -46,11 +46,11 @@ export class TaskCheckerService {
     if (!save) return this.missingDemo();
     save.click();
     await pause(30);
-    return this.text(root, 'save-status') === 'Changes saved'
+    return this.text(root, 'save-status') === 'Änderungen gespeichert'
       ? this.success()
       : this.failure(
-          'Save did not complete.',
-          'The component initializes now, but the visible success state is still missing.',
+          'Speichern wurde nicht abgeschlossen.',
+          'Die Komponente startet jetzt, aber der sichtbare Erfolgsstatus fehlt noch.',
         );
   }
 
@@ -61,12 +61,12 @@ export class TaskCheckerService {
     this.button(root, 'promote')?.click();
     await pause(40);
     const promoted = this.text(root, 'role');
-    return initial === 'User' && promoted === 'Admin'
+    return initial === 'Benutzer' && promoted === 'Administrator'
       ? this.success()
       : this.failure(
-          'The child still displays “User”.',
-          'The click handler ran, but the child view did not receive the kind of change Angular is watching for.',
-          [`Initial role: ${initial || 'missing'}`, `After promotion: ${promoted || 'missing'}`],
+          'Das Child zeigt weiterhin „Benutzer“ an.',
+          'Der Handler lief, aber die Child-View erhielt nicht die Änderung, auf die OnPush achtet.',
+          [`Ausgangsrolle: ${initial || 'fehlt'}`, `Nach der Änderung: ${promoted || 'fehlt'}`],
         );
   }
 
@@ -95,9 +95,9 @@ export class TaskCheckerService {
     return observed.every((value, index) => value === expected[index])
       ? this.success()
       : this.failure(
-          'The counter missed an asynchronous state change.',
-          'The value changes in JavaScript, but every transition must also reach the rendered view.',
-          [`Expected: ${expected.join(' → ')}`, `Observed: ${observed.join(' → ')}`],
+          'Der Zähler hat ein asynchrones Update verpasst.',
+          'Der JavaScript-Wert ändert sich, aber jeder Übergang muss auch die gerenderte View erreichen.',
+          [`Erwartet: ${expected.join(' → ')}`, `Beobachtet: ${observed.join(' → ')}`],
         );
   }
 
@@ -119,9 +119,9 @@ export class TaskCheckerService {
     return observed.every((value, index) => value === expected[index])
       ? this.success()
       : this.failure(
-          'The completed total drifted away from the task list.',
-          'One source-state transition still requires manual synchronization.',
-          [`Expected: ${expected.join(' → ')}`, `Observed: ${observed.join(' → ')}`],
+          'Zähler und Todo-Liste sind nicht mehr konsistent.',
+          'Mindestens ein Update liefert dem Signal noch keine neue Referenz oder hält kopierten Zustand synchron.',
+          [`Erwartet: ${expected.join(' → ')}`, `Beobachtet: ${observed.join(' → ')}`],
         );
   }
 
@@ -141,14 +141,14 @@ export class TaskCheckerService {
     this.button(root, 'filter-done')?.click();
     await pause(30);
     observed.push(this.text(root, 'visible-count'));
-    const expected = ['3 shown', '2 shown', '1 shown', '2 shown', '2 shown'];
+    const expected = ['3 angezeigt', '2 angezeigt', '1 angezeigt', '2 angezeigt', '2 angezeigt'];
 
     return observed.every((value, index) => value === expected[index])
       ? this.success()
       : this.failure(
-          'The filtered list is still stale.',
-          'Changing both the source list and selected filter must recompute the same derived result.',
-          [`Expected: ${expected.join(' → ')}`, `Observed: ${observed.join(' → ')}`],
+          'Die gefilterte Liste ist noch veraltet.',
+          'Source-Liste und Filter müssen denselben abgeleiteten Wert neu berechnen.',
+          [`Erwartet: ${expected.join(' → ')}`, `Beobachtet: ${observed.join(' → ')}`],
         );
   }
 
@@ -160,12 +160,12 @@ export class TaskCheckerService {
     start.click();
     await pause(150);
     const status = this.text(root, 'sync-status');
-    return status === 'Ready'
+    return status === 'Bereit'
       ? this.success()
       : this.failure(
-          'The callback completed, but the view is still waiting.',
-          'Keep the async mechanism and provide Angular an appropriate notification for view-relevant state.',
-          [`Rendered status: ${status || 'missing'}`],
+          'Der Callback ist fertig, aber die View wartet noch.',
+          'Behalte den Async-Mechanismus bei und benachrichtige Angular passend über den View-Zustand.',
+          [`Gerenderter Status: ${status || 'fehlt'}`],
         );
   }
 
@@ -186,15 +186,15 @@ export class TaskCheckerService {
     const afterToggle = this.text(root, 'active-count');
     const visibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
 
-    return initial === '3 active' && afterToggle === '2 active' && visibleUsers === 2
+    return initial === '3 aktiv' && afterToggle === '2 aktiv' && visibleUsers === 2
       ? this.success()
       : this.failure(
-          'The active-user view is still copied state.',
-          'Changing source state should update every derived count and list without a manual synchronization step.',
+          'Die Ansicht aktiver Teammitglieder ist noch kopierter Zustand.',
+          'Eine Änderung der Source of Truth muss jede Liste und jeden Zähler ohne manuelle Synchronisierung aktualisieren.',
           [
-            `Initial: ${initial || 'missing'}`,
-            `After status change: ${afterToggle || 'missing'}`,
-            `Visible active users: ${visibleUsers}`,
+            `Ausgangswert: ${initial || 'fehlt'}`,
+            `Nach Statusänderung: ${afterToggle || 'fehlt'}`,
+            `Sichtbare aktive Personen: ${visibleUsers}`,
           ],
         );
   }
@@ -208,7 +208,11 @@ export class TaskCheckerService {
   }
 
   private success(): TaskCheckResult {
-    return { passed: true, title: 'Challenge solved', message: 'Every observed behavior passed.' };
+    return {
+      passed: true,
+      title: 'Aufgabe gelöst',
+      message: 'Alle geprüften Zustandsübergänge funktionieren.',
+    };
   }
 
   private failure(title: string, message: string, details?: string[]): TaskCheckResult {
@@ -217,8 +221,8 @@ export class TaskCheckerService {
 
   private missingDemo(): TaskCheckResult {
     return this.failure(
-      'The live example is incomplete.',
-      'Restore the exercise controls and try the check again.',
+      'Das Live-Beispiel ist unvollständig.',
+      'Stelle die Bedienelemente der Aufgabe wieder her und starte den Check erneut.',
     );
   }
 }

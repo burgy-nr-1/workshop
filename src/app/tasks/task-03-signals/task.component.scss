@@ -1,0 +1,15 @@
+.counter-display {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-block: 32px 19px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.counter-display strong {
+  color: var(--accent);
+  font-size: 4.5rem;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+}

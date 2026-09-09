@@ -1,10 +1,12 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService, WorkshopUser } from './user.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-07',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task07Component {
   private readonly userService = inject(UserService);

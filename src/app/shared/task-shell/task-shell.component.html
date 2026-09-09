@@ -1,0 +1,151 @@
+@if (task(); as currentTask) {
+  <div class="page challenge-page">
+    <nav class="challenge-nav" aria-label="Aufgabennavigation">
+      <a routerLink="/" class="back-link"><span aria-hidden="true">←</span> Alle Aufgaben</a>
+      <span>
+        Aufgabe {{ currentTask.number.toString().padStart(2, '0') }} /
+        {{ tasks.length.toString().padStart(2, '0') }}
+      </span>
+    </nav>
+
+    <header class="challenge-hero">
+      <div>
+        <p class="eyebrow">{{ currentTask.category }} · {{ currentTask.concept }}</p>
+        <h1>{{ currentTask.title }}</h1>
+        <p>{{ currentTask.subtitle }}</p>
+      </div>
+      <div class="challenge-meta">
+        <span>{{ currentTask.difficulty }}</span>
+        <span>{{ currentTask.estimatedMinutes }}</span>
+      </div>
+    </header>
+
+    <section class="challenge-workspace">
+      <div class="instructions-panel">
+        <p class="panel-label">Aufgabe</p>
+        <section>
+          <h2>Problem</h2>
+          <p>{{ currentTask.problem }}</p>
+        </section>
+        <section>
+          <h2>Ziel</h2>
+          <p>{{ currentTask.goal }}</p>
+        </section>
+        <section>
+          <h2>Rahmenbedingungen</h2>
+          <ul class="constraint-list">
+            @for (constraint of currentTask.constraints; track constraint) {
+              <li>{{ constraint }}</li>
+            }
+          </ul>
+        </section>
+        <section>
+          <h2>Zu bearbeitende Datei</h2>
+          <div class="file-path">
+            <code>{{ currentTask.filePath }}</code>
+            <button
+              type="button"
+              (click)="copyPath(currentTask.filePath)"
+              [attr.aria-label]="copyLabel() + ': Dateipfad'"
+            >
+              {{ copyLabel() }}
+            </button>
+          </div>
+        </section>
+        @if (currentTask.id === 'task-01') {
+          <p class="console-tip">
+            <strong>Tipp:</strong> Die Browser-Konsole gehört zu deinem Debugging-Werkzeug.
+          </p>
+        }
+        <section class="hints-section">
+          <h2>Hinweise</h2>
+          @for (hint of currentTask.hints; track hint; let index = $index) {
+            <details>
+              <summary>Hinweis {{ index + 1 }}</summary>
+              <p>{{ hint }}</p>
+            </details>
+          }
+        </section>
+      </div>
+
+      <div class="live-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-label">Live-Beispiel</p>
+            <h2>Verhalten ausprobieren</h2>
+          </div>
+          <span class="live-badge"><i></i> Live</span>
+        </div>
+        @if (taskComponent(); as component) {
+          <app-task-runner [component]="component" />
+        }
+      </div>
+    </section>
+
+    <section class="checker-panel" aria-labelledby="checker-title">
+      <div>
+        <p class="panel-label">Runtime-Check</p>
+        <h2 id="checker-title">Stimmt das Verhalten?</h2>
+        <p>Der Check durchläuft im Live-Beispiel mehrere Zustandsübergänge.</p>
+      </div>
+      <button
+        class="check-button"
+        type="button"
+        [disabled]="checking()"
+        (click)="runCheck(currentTask.id)"
+      >
+        @if (checking()) {
+          Wird geprüft…
+        } @else {
+          Lösung prüfen
+        }
+      </button>
+    </section>
+
+    <div class="result-region" aria-live="polite">
+      @if (result(); as checkResult) {
+        <section
+          class="check-result"
+          [class.success]="checkResult.passed"
+          [class.failure]="!checkResult.passed"
+        >
+          <span class="result-icon" aria-hidden="true">{{ checkResult.passed ? '✓' : '!' }}</span>
+          <div>
+            <h2>{{ checkResult.title }}</h2>
+            <p>{{ checkResult.message }}</p>
+            @if (checkResult.passed) {
+              <p class="key-idea">
+                <strong>Kernidee:</strong> {{ currentTask.successExplanation }}
+              </p>
+              <div class="result-actions">
+                <a class="secondary-button" routerLink="/">Zur Aufgabenübersicht</a>
+                @if (nextTask(); as next) {
+                  <a class="primary-button" [routerLink]="['/tasks', next.slug]">
+                    Nächste Aufgabe <span aria-hidden="true">→</span>
+                  </a>
+                }
+              </div>
+            } @else if (debugMode() && checkResult.details?.length) {
+              <ul class="debug-details">
+                @for (detail of checkResult.details; track detail) {
+                  <li>{{ detail }}</li>
+                }
+              </ul>
+            }
+          </div>
+        </section>
+      } @else {
+        <p class="neutral-result">
+          Noch nicht geprüft. Datei bearbeiten, Angular kompilieren lassen und dann den Check
+          starten.
+        </p>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="page not-found">
+    <p class="eyebrow">Aufgabe nicht gefunden</p>
+    <h1>Diese Route gehört zu keiner Workshop-Aufgabe.</h1>
+    <a class="primary-button" routerLink="/">Zur Aufgabenübersicht</a>
+  </div>
+}

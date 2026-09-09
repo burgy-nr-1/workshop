@@ -1,8 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-03',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task03Component {
   protected readonly count = signal(0);

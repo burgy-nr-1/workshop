@@ -1,33 +1,33 @@
-# Author reference solutions
+# Referenzlösungen für Workshop-Autorinnen und -Autoren
 
-These files are outside the compiled Angular source tree and are not linked from the participant UI. On a separate `solutions` branch, copy each task's files over the matching `src/app/tasks/` files, then run `npm test` and `npm run build`.
+Diese Dateien liegen außerhalb des kompilierten Angular-Source-Trees und sind nicht in der Oberfläche verlinkt. Auf einem separaten `solutions`-Branch die Dateien jeder Aufgabe über die gleichnamigen Dateien unter `src/app/tasks/` kopieren und anschließend `npm test` sowie `npm run build` ausführen.
 
-## Task 01
+## Aufgabe 01
 
-Inject `DestroyRef` into a field and pass it to `takeUntilDestroyed(this.destroyRef)` in `ngOnInit`. Keep the subscription and Save behavior.
+`DestroyRef` als Feld injizieren und in `ngOnInit` an `takeUntilDestroyed(this.destroyRef)` übergeben. Subscription und Speichern-Verhalten bleiben bestehen.
 
-## Task 02
+## Aufgabe 02
 
-Replace the mutation with a new reference: `this.user = { ...this.user, role: 'Admin' };`.
+Die Mutation durch eine neue Referenz ersetzen: `this.user = { ...this.user, role: 'Administrator' };`. Das Child bleibt OnPush und behält seinen Signal-Input sowie Signal-Output.
 
-## Task 03
+## Aufgabe 03
 
-Make `count` a `signal(0)`, read it as `count()` in the template, use `count.update(value => value + 1)` in the callback, and `count.set(0)` on reset.
+`count` zu `signal(0)` machen, im Template mit `count()` lesen, im Callback `count.update(count => count + 1)` und beim Reset `count.set(0)` verwenden.
 
-## Task 04
+## Aufgabe 04
 
-Replace writable `completedCount` and every synchronization call with `computed(() => this.tasks().filter(task => task.completed).length)`.
+`completedCount` mit `computed()` aus `tasks()` ableiten. Toggle und Hinzufügen liefern über `update()` eine neue Liste; beim Toggle entsteht zusätzlich ein neues Todo-Objekt.
 
-## Task 05
+## Aufgabe 05
 
-Make `filter` a signal and `filteredTasks` a computed value that reads both `tasks()` and `filter()`. Remove the synchronization effect; update template reads and setters accordingly.
+`filteredTasks` als `computed()` modellieren, das `tasks()` und `filter()` synchron liest. Den Constructor-`effect()` vollständig entfernen: Er synchronisiert Derived State, liest nach `await` ungetrackt und liest/setzt dasselbe Signal.
 
-## Task 06
+## Aufgabe 06
 
-Make `status` a signal, read it in the template, and use `set()` inside both the callback and reset. The callback remains a normal browser timer; the signal update supplies Angular's notification.
+`status` als Signal modellieren, im Template aufrufen und im Callback sowie beim Reset mit `set()` aktualisieren. Der normale Browser-Timer bleibt erhalten; das Signal-Update benachrichtigt Angular.
 
-## Task 07
+## Aufgabe 07
 
-Keep the service Observable. Convert it at the boundary with `toSignal()` (or subscribe with `takeUntilDestroyed`), model selected/search state as signals, and derive active/visible users with `computed()`. Replace users immutably when toggling status and remove `ChangeDetectorRef`, manual collection synchronization, and the cleanup subscription.
+Das Service-Observable beibehalten und mit `toSignal()` oder `takeUntilDestroyed()` an der Async-Grenze anbinden. Auswahl und Suche werden Signals, aktive und sichtbare Personen `computed()`. Statusänderungen ersetzen Nutzer immutable. `ChangeDetectorRef`, kopierte Collections und Cleanup-Subscription entfallen; die Komponente verwendet OnPush.
 
-The runtime checkers intentionally accept equivalent behavior-first solutions. Constraints carry architectural teaching that cannot be verified robustly without brittle source inspection.
+Die Runtime-Checks akzeptieren absichtlich gleichwertige, verhaltensbasierte Lösungen. Architekturelle Rahmenbedingungen werden nicht durch fragile Source-Text-Prüfungen erzwungen.

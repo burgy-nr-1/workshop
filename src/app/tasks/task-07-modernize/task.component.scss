@@ -1,0 +1,144 @@
+.people-dashboard {
+  min-height: 430px;
+}
+
+.loading-row {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px dashed var(--border);
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.search-field {
+  display: grid;
+  gap: 7px;
+  margin-top: 21px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.search-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  background: #0d1017;
+  color: var(--text);
+}
+
+.search-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(255 180 91 / 10%);
+}
+
+.people-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 0.7fr);
+  gap: 13px;
+  margin-top: 15px;
+}
+
+.people-list {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+
+.people-list > button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-soft);
+  cursor: pointer;
+  text-align: left;
+}
+
+.people-list > button.selected {
+  border-color: rgb(255 180 91 / 45%);
+  background: rgb(255 180 91 / 6%);
+}
+
+.people-list .avatar {
+  width: 34px;
+  flex-basis: 34px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.people-list strong,
+.people-list small {
+  display: block;
+}
+
+.people-list strong {
+  font-size: 12px;
+}
+
+.people-list small {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.selected-person {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0e1219;
+}
+
+.selected-person h4 {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.selected-person p {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.selected-person .secondary-button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--success);
+  font-size: 11px;
+}
+
+.status-dot::before {
+  width: 6px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.status-dot.inactive {
+  color: var(--danger);
+}
+
+.empty-state {
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .people-layout {
+    grid-template-columns: 1fr;
+  }
+}

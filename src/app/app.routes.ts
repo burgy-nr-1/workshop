@@ -7,7 +7,7 @@ export const routes: Routes = [
       import('./workshop/workshop-home.component').then(
         ({ WorkshopHomeComponent }) => WorkshopHomeComponent,
       ),
-    title: 'Angular 22 Workshop',
+    title: 'Angular-22-Workshop',
   },
   {
     path: 'tasks/:slug',
@@ -15,7 +15,7 @@ export const routes: Routes = [
       import('./shared/task-shell/task-shell.component').then(
         ({ TaskShellComponent }) => TaskShellComponent,
       ),
-    title: 'Challenge · Angular 22 Workshop',
+    title: 'Aufgabe · Angular-22-Workshop',
   },
   { path: '**', redirectTo: '' },
 ];

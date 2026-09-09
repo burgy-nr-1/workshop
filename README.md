@@ -1,65 +1,79 @@
 # Angular 22 — OnPush, Zoneless & Signals
 
-Tech & Learn interactive coding workshop. Seven independent debugging and refactoring challenges teach the modern Angular change-detection mental model through real application behavior.
+Interaktiver Tech-&-Learn-Coding-Workshop zu modernen Angular-Architekturen. Sieben unabhängige Debugging- und Refactoring-Aufgaben vermitteln das Reaktivitätsmodell von Angular 22 anhand von beobachtbarem Anwendungsverhalten.
 
-## For participants
+## Für Teilnehmende
 
-1. Open the StackBlitz link and fork the project.
-2. Open any challenge from the dashboard.
-3. Read the problem, goal, and constraints.
-4. Edit the exact source file shown on the challenge page.
-5. Let Angular recompile, return to the preview, and click **Check solution**.
-6. Continue to any other challenge.
+1. StackBlitz-Link öffnen und das Projekt forken.
+2. Eine beliebige Aufgabe in der Übersicht öffnen.
+3. Problem, Ziel und Rahmenbedingungen lesen.
+4. Die auf der Aufgabenseite angegebene Datei bearbeiten.
+5. Angular neu kompilieren lassen, zur Vorschau wechseln und **Lösung prüfen** wählen.
+6. Mit einer beliebigen weiteren Aufgabe fortfahren.
 
-Every challenge is independent. The starter exercise implementations are intentionally broken, but they all compile. To fully reset code in StackBlitz, discard your edits or create a fresh fork; **Reset progress only** clears solved metadata, not source files.
+Jede Aufgabe ist unabhängig. Die Starter-Implementierungen sind absichtlich fehlerhaft, kompilieren aber. Für einen vollständigen Code-Reset in StackBlitz Änderungen verwerfen oder einen neuen Fork anlegen. **Nur Fortschritt zurücksetzen** löscht ausschließlich den gespeicherten Lösungsstand, keine Source-Dateien.
 
-## Running locally
+## Lokal starten
 
 ```bash
 npm install
 npm start
 ```
 
-Open `http://localhost:4200/`.
+Danach `http://localhost:4200/` öffnen.
 
-## Tests
+## Tests und Build
 
 ```bash
 npm test
 npm run build
 ```
 
-The default suite uses Angular CLI's Vitest runner and remains green on the intentionally broken starter branch. Reference acceptance coverage is kept separate from starter behavior.
+Die Standard-Suite verwendet den Vitest-Runner der Angular CLI und bleibt auch mit den absichtlich fehlerhaften Starter-Aufgaben grün. Die Referenzlösungen werden separat geprüft.
 
-## Workshop topics
+## Workshop-Inhalte
 
-- OnPush-by-default change detection and input references
-- writable Signals with `signal()`
-- synchronous derived state with `computed()`
-- appropriate use of `effect()`
-- zoneless view notifications
-- `DestroyRef`, injection context, and `takeUntilDestroyed()`
-- pragmatic RxJS/Signals interoperability and migration patterns
+- Angular-22-Migration: von durch `ng update` erhaltenem Eager-Verhalten schrittweise zu OnPush
+- OnPush-Benachrichtigungen durch neue Input-Referenzen, Events und Signals
+- signalbasierte Inputs und Outputs
+- schreibbarer Zustand mit `signal()`, `set()` und `update()`
+- immutable Listen- und Objekt-Updates statt `push()` und in-place Mutation
+- synchroner, lazy und memoized Derived State mit `computed()`
+- `effect()` nur für Side Effects; keine Read/Write-Schleife auf demselben Signal
+- nur synchron erfasste Dependencies in `effect()` — Lesezugriffe nach `await` werden nicht getrackt
+- zoneless Updates durch Signals; weitere Pfade sind Angular-Listener, AsyncPipe, `setInput()` und `markForCheck()`
+- `DestroyRef`, Injection Context und `takeUntilDestroyed()`
+- pragmatische RxJS/Signals-Interop bei schrittweisen Migrationen
+- DOM-basierte Tests, die fehlende Benachrichtigungen sichtbar machen
+
+Angular 22 ist zoneless by default. Dieses Projekt enthält deshalb weder eine `zone.js`-Dependency noch einen Zone-Provider oder ZoneJS-Polyfill.
+
+## Browser-Konsole
+
+Eine vollständige DevTools-Konsole lässt sich nicht sinnvoll direkt in eine normale Webseite einbetten. Die Seite kann wegen der Browser-Sicherheitsgrenzen weder die DevTools-Oberfläche noch deren vollständige Historie und Debugger-Funktionen übernehmen. Ein eigener Log-Bereich könnte lediglich gezielt weitergeleitete App-Meldungen anzeigen und wäre kein Ersatz für die Browser-Konsole. Aufgabe 1 verweist deshalb bewusst auf die echten DevTools; ein vereinfachtes Konsolen-Imitat ist nicht eingebaut.
+
+Für zusätzliche Details der Runtime-Checks kann an eine Aufgaben-URL `?debugTasks=true` angehängt werden. Diese Diagnostik zeigt nur die beobachteten Zustandsübergänge und fängt nicht global `console.*` ab.
+
+## Projektstruktur
+
+Die Angular-Komponenten folgen den Konventionen der Stationär-Projekte: getrennte `.ts`-, `.html`- und `.scss`-Dateien, SCSS als Workspace-Standard, `app-`-Selektoren, explizite Sichtbarkeiten und Typen an öffentlichen APIs sowie `ChangeDetectionStrategy.OnPush` für modernisierte Komponenten. Die Übungs-Starter weichen nur dort absichtlich ab, wo genau diese Abweichung Teil der Aufgabe ist.
 
 ## StackBlitz
 
-The project is designed to open or fork directly from GitHub in StackBlitz WebContainers. The `stackblitz.startCommand` package setting launches `npm start` automatically.
+Das Projekt kann direkt aus GitHub in einem StackBlitz WebContainer geöffnet oder geforkt werden. `stackblitz.startCommand` startet automatisch `npm start`.
 
 ```text
 https://stackblitz.com/github/OWNER/REPOSITORY
 https://stackblitz.com/fork/github/OWNER/REPOSITORY
 ```
 
-Replace `OWNER/REPOSITORY` after publishing; no environment variables, backend, database, authentication, or remote API is required.
+Nach der Veröffentlichung `OWNER/REPOSITORY` ersetzen. Umgebungsvariablen, Backend, Datenbank, Authentifizierung oder Remote-API sind nicht erforderlich.
 
-## Workshop author notes
+## Hinweise für Workshop-Autorinnen und -Autoren
 
-- Task metadata and participant copy live in `src/app/data/workshop-tasks.ts`.
-- Runtime checkers in `src/app/shared/task-checker/` exercise the rendered demo instead of inspecting source strings.
-- `TaskRunnerComponent` creates each exercise dynamically and catches initialization failures so Task 1 cannot destroy the shell.
-- Solved state is stored locally by `ProgressService`.
-- Add a task by creating its component, registering it in `src/app/tasks/task-components.ts`, adding metadata, and adding a checker case.
-- Keep intentionally broken starters on `main`; apply the author reference notes in `solutions/` on a `solutions` branch for delivery.
-- Add `?debugTasks=true` to a challenge URL to expose checker transition diagnostics after a failed check.
-
-Angular 22 is zoneless by default. This project deliberately has no `zone.js` dependency and adds no legacy or redundant zoneless provider.
+- Aufgabenmetadaten und Texte liegen in `src/app/data/workshop-tasks.ts`.
+- Runtime-Checks unter `src/app/shared/task-checker/` prüfen das gerenderte Verhalten statt Source-Strings.
+- `TaskRunnerComponent` erstellt jede Übung dynamisch und fängt Initialisierungsfehler ab, damit Aufgabe 1 nicht die Workshop-Shell zerstört.
+- `ProgressService` speichert gelöste Aufgaben lokal.
+- Neue Aufgaben benötigen eine Komponente, einen Eintrag in `src/app/tasks/task-components.ts`, Metadaten und einen Checker-Fall.
+- Die absichtlich fehlerhaften Starter bleiben auf `main`; die Dateien unter `solutions/` dokumentieren die Referenzlösungen für einen separaten `solutions`-Branch.

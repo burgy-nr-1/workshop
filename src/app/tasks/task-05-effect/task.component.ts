@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
 
 type TaskFilter = 'all' | 'open' | 'done';
 
@@ -9,36 +9,49 @@ interface BoardTask {
 }
 
 const INITIAL_TASKS: BoardTask[] = [
-  { id: 1, title: 'Draft release notes', done: true },
-  { id: 2, title: 'Review pull request', done: false },
-  { id: 3, title: 'Update test plan', done: true },
+  { id: 1, title: 'Release Notes entwerfen', done: true },
+  { id: 2, title: 'Pull Request prüfen', done: false },
+  { id: 3, title: 'Testplan aktualisieren', done: true },
 ];
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-05',
   templateUrl: './task.component.html',
+  styleUrl: './task.component.scss',
 })
 export class Task05Component {
   protected readonly tasks = signal(INITIAL_TASKS.map((task) => ({ ...task })));
-  protected filter: TaskFilter = 'all';
+  protected readonly filter = signal<TaskFilter>('all');
   protected readonly filteredTasks = signal(this.tasks());
+  protected readonly filterOptions: readonly TaskFilter[] = ['all', 'open', 'done'];
+  protected readonly filterLabels: Readonly<Record<TaskFilter, string>> = {
+    all: 'Alle',
+    open: 'Offen',
+    done: 'Erledigt',
+  };
 
-  private readonly synchronizeFilter = effect(() => {
-    const tasks = this.tasks();
-    this.filteredTasks.set(tasks.filter((task) => this.matches(task, this.filter)));
-  });
+  constructor() {
+    effect(async () => {
+      const tasks = this.tasks();
+      await Promise.resolve();
+      const filter = this.filter();
+      this.filter.set(filter);
+      this.filteredTasks.set(tasks.filter((task) => this.matches(task, filter)));
+    });
+  }
 
   protected setFilter(filter: TaskFilter): void {
-    this.filter = filter;
+    this.filter.set(filter);
   }
 
   protected addOpenTask(): void {
     const id = Math.max(...this.tasks().map((task) => task.id)) + 1;
-    this.tasks.update((tasks) => [...tasks, { id, title: `Follow-up ${id}`, done: false }]);
+    this.tasks.update((tasks) => [...tasks, { id, title: `Nachbereitung ${id}`, done: false }]);
   }
 
   protected reset(): void {
-    this.filter = 'all';
+    this.filter.set('all');
     this.tasks.set(INITIAL_TASKS.map((task) => ({ ...task })));
   }
 

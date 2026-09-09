@@ -4,7 +4,7 @@ import { ProgressService } from './progress.service';
 describe('ProgressService', () => {
   beforeEach(() => localStorage.clear());
 
-  it('persists solved tasks and resets progress without touching source code', () => {
+  it('speichert gelöste Aufgaben und setzt Fortschritt ohne Source-Änderung zurück', () => {
     const service = TestBed.inject(ProgressService);
     service.markSolved('task-02');
 

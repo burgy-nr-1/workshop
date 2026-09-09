@@ -1,0 +1,12 @@
+<div class="runner-surface">
+  <div [hidden]="failed()"><ng-container #host /></div>
+  @if (failed()) {
+    <section class="runner-error" role="status">
+      <span class="runner-error-icon" aria-hidden="true">!</span>
+      <div>
+        <h3>Die Aufgabe ist bei der Initialisierung fehlgeschlagen.</h3>
+        <p>Das gehört zur Übung. Weitere Informationen stehen in der Browser-Konsole.</p>
+      </div>
+    </section>
+  }
+</div>

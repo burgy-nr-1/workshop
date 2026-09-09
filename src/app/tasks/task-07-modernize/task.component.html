@@ -1,23 +1,23 @@
 <article class="demo-card people-dashboard">
   <div class="demo-card-heading">
     <div>
-      <span class="demo-kicker">Project team</span>
-      <h3>People dashboard</h3>
+      <span class="demo-kicker">Projektteam</span>
+      <h3>Team-Dashboard</h3>
     </div>
-    <strong class="count-pill" data-testid="active-count">{{ activeUsers.length }} active</strong>
+    <strong class="count-pill" data-testid="active-count">{{ activeUsers.length }} aktiv</strong>
   </div>
 
   @if (loading) {
-    <div class="loading-row" data-testid="loading">Loading team…</div>
+    <div class="loading-row" data-testid="loading">Team wird geladen…</div>
   } @else {
     <label class="search-field">
-      <span>Find an active team member</span>
+      <span>Aktives Teammitglied finden</span>
       <input
         #search
         type="search"
         [value]="searchTerm"
         (input)="updateSearch(search.value)"
-        placeholder="Search by name"
+        placeholder="Nach Name suchen"
       />
     </label>
 
@@ -39,17 +39,17 @@
             >
           </button>
         } @empty {
-          <p class="empty-state">No active team members found.</p>
+          <p class="empty-state">Keine aktiven Teammitglieder gefunden.</p>
         }
       </div>
 
       @if (selectedUser; as selected) {
-        <section class="selected-person" aria-label="Selected team member">
-          <span class="label">Selected</span>
+        <section class="selected-person" aria-label="Ausgewähltes Teammitglied">
+          <span class="label">Ausgewählt</span>
           <h4>{{ selected.name }}</h4>
           <p>{{ selected.role }}</p>
           <span class="status-dot" [class.inactive]="!selected.active">
-            {{ selected.active ? 'Active' : 'Inactive' }}
+            {{ selected.active ? 'Aktiv' : 'Inaktiv' }}
           </span>
           <button
             class="secondary-button"
@@ -57,7 +57,7 @@
             data-testid="toggle-active"
             (click)="toggleSelectedStatus()"
           >
-            Toggle active status
+            Aktivstatus umschalten
           </button>
         </section>
       }

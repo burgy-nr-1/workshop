@@ -7,21 +7,21 @@ const STORAGE_KEY = 'angular-22-workshop-progress';
 export class ProgressService {
   private readonly solved = signal<ReadonlySet<string>>(this.read());
 
-  readonly solvedCount = computed(() => this.solved().size);
-  readonly totalCount = WORKSHOP_TASKS.length;
-  readonly percent = computed(() => (this.solvedCount() / this.totalCount) * 100);
+  public readonly solvedCount = computed(() => this.solved().size);
+  public readonly totalCount = WORKSHOP_TASKS.length;
+  public readonly percent = computed(() => (this.solvedCount() / this.totalCount) * 100);
 
-  isSolved(taskId: string): boolean {
+  public isSolved(taskId: string): boolean {
     return this.solved().has(taskId);
   }
 
-  markSolved(taskId: string): void {
+  public markSolved(taskId: string): void {
     const next = new Set(this.solved()).add(taskId);
     this.solved.set(next);
     this.write(next);
   }
 
-  reset(): void {
+  public reset(): void {
     this.solved.set(new Set());
     globalThis.localStorage?.removeItem(STORAGE_KEY);
   }

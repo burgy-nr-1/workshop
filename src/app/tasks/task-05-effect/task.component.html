@@ -1,20 +1,22 @@
 <article class="demo-card filter-card">
   <div class="demo-card-heading">
     <div>
-      <span class="demo-kicker">Team board</span>
-      <h3>Delivery tasks</h3>
+      <span class="demo-kicker">Team-Board</span>
+      <h3>Lieferaufgaben</h3>
     </div>
-    <span class="count-pill" data-testid="visible-count">{{ filteredTasks().length }} shown</span>
+    <span class="count-pill" data-testid="visible-count">
+      {{ filteredTasks().length }} angezeigt
+    </span>
   </div>
-  <div class="segmented-control" aria-label="Filter tasks">
-    @for (option of ['all', 'open', 'done']; track option) {
+  <div class="segmented-control" aria-label="Aufgaben filtern">
+    @for (option of filterOptions; track option) {
       <button
         type="button"
-        [class.active]="filter === option"
+        [class.active]="filter() === option"
         [attr.data-testid]="'filter-' + option"
-        (click)="setFilter($any(option))"
+        (click)="setFilter(option)"
       >
-        {{ option }}
+        {{ filterLabels[option] }}
       </button>
     }
   </div>
@@ -28,10 +30,10 @@
   </ul>
   <div class="demo-actions">
     <button class="secondary-button" type="button" data-testid="add-open" (click)="addOpenTask()">
-      Add open task
+      Offene Aufgabe hinzufügen
     </button>
     <button class="secondary-button" type="button" data-testid="reset" (click)="reset()">
-      Reset
+      Zurücksetzen
     </button>
   </div>
 </article>

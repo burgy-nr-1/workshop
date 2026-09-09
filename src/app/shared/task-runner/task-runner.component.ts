@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ElementRef,
@@ -14,45 +15,35 @@ import {
 } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-runner',
-  template: `
-    <div class="runner-surface">
-      <div [hidden]="failed()"><ng-container #host /></div>
-      @if (failed()) {
-        <section class="runner-error" role="status">
-          <span class="runner-error-icon" aria-hidden="true">!</span>
-          <div>
-            <h3>The exercise failed during initialization.</h3>
-            <p>That is part of the challenge. Open the browser console for more information.</p>
-          </div>
-        </section>
-      }
-    </div>
-  `,
+  templateUrl: './task-runner.component.html',
+  styleUrl: './task-runner.component.scss',
 })
 export class TaskRunnerComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @Input({ required: true }) component!: Type<unknown>;
+  @Input({ required: true }) public component!: Type<unknown>;
   @ViewChild('host', { read: ViewContainerRef }) private host?: ViewContainerRef;
 
   protected readonly failed = signal(false);
+
   private componentRef?: ComponentRef<unknown>;
   private loadedComponent?: Type<unknown>;
 
-  constructor(readonly element: ElementRef<HTMLElement>) {}
+  constructor(public readonly element: ElementRef<HTMLElement>) {}
 
-  get initializationFailed(): boolean {
+  public get initializationFailed(): boolean {
     return this.failed();
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     queueMicrotask(() => this.load());
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['component'] && this.host) queueMicrotask(() => this.load());
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.componentRef?.destroy();
   }
 
@@ -66,7 +57,7 @@ export class TaskRunnerComponent implements AfterViewInit, OnChanges, OnDestroy 
       this.componentRef = this.host.createComponent(this.component);
       this.componentRef.changeDetectorRef.detectChanges();
     } catch (error) {
-      console.error('Challenge initialization failed:', error);
+      console.error('Die Aufgabe ist bei der Initialisierung fehlgeschlagen:', error);
       this.host.clear();
       this.componentRef = undefined;
       this.failed.set(true);

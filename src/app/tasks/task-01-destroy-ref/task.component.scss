@@ -1,0 +1,25 @@
+.demo-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-block: 24px;
+}
+
+.demo-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-soft);
+}
+
+.demo-details dt,
+.demo-details dd {
+  font-size: 12px;
+}
+
+.demo-details dt {
+  color: var(--text-muted);
+}
