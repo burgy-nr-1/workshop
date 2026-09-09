@@ -1,0 +1,49 @@
+.selected-person {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0e1219;
+}
+
+.selected-person h4 {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.selected-person p {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--success);
+  font-size: 11px;
+}
+
+.status-dot::before {
+  width: 6px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.status-dot.inactive {
+  color: var(--danger);
+}
+
+.selected-person .team-context {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.secondary-button {
+  width: 100%;
+  margin-top: 20px;
+}

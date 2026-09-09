@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserDetailsComponent } from './user-details/user-details.component';
 import { UserService, WorkshopUser } from './user.service';
 
 @Component({
@@ -7,6 +8,7 @@ import { UserService, WorkshopUser } from './user.service';
   selector: 'app-task-06',
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
+  imports: [UserDetailsComponent],
 })
 export class Task06Component {
   private readonly userService = inject(UserService);
@@ -42,11 +44,9 @@ export class Task06Component {
     this.searchTerm.set(value);
   }
 
-  protected toggleSelectedStatus(): void {
-    const selected = this.selectedUser();
-    if (!selected) return;
+  protected toggleUserStatus(userId: number): void {
     this.users.update((users) =>
-      users.map((user) => (user.id === selected.id ? { ...user, active: !user.active } : user)),
+      users.map((user) => (user.id === userId ? { ...user, active: !user.active } : user)),
     );
   }
 }

@@ -7,7 +7,7 @@ Interaktiver Tech-&-Learn-Coding-Workshop zu modernen Angular-Architekturen. Sec
 1. StackBlitz-Link öffnen und das Projekt forken.
 2. Eine beliebige Aufgabe in der Übersicht öffnen.
 3. Problem, Ziel und Rahmenbedingungen lesen.
-4. Die auf der Aufgabenseite angegebene Datei bearbeiten.
+4. Die auf der Aufgabenseite angegebene Datei oder das Verzeichnis bearbeiten.
 5. Angular neu kompilieren lassen, zur Vorschau wechseln und **Lösung prüfen** wählen.
 6. Mit einer beliebigen weiteren Aufgabe fortfahren.
 

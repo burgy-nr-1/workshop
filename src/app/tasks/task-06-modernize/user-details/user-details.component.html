@@ -1,0 +1,19 @@
+<section class="selected-person" aria-label="Ausgewähltes Teammitglied">
+  <span class="label">Ausgewählt</span>
+  <h4 data-testid="selected-name">{{ user.name }}</h4>
+  <p>{{ user.role }}</p>
+  <span class="status-dot" data-testid="selected-status" [class.inactive]="!user.active">
+    {{ user.active ? 'Aktiv' : 'Inaktiv' }}
+  </span>
+  <p class="team-context" data-testid="detail-active-count">
+    {{ activeCount }} aktive Personen im Team
+  </p>
+  <button
+    class="secondary-button"
+    type="button"
+    data-testid="toggle-active"
+    (click)="requestStatusChange()"
+  >
+    Aktivstatus umschalten
+  </button>
+</section>

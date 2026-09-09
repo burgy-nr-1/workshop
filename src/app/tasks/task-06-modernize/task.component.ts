@@ -7,6 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { UserDetailsComponent } from './user-details/user-details.component';
 import { UserService, WorkshopUser } from './user.service';
 
 @Component({
@@ -14,10 +15,11 @@ import { UserService, WorkshopUser } from './user.service';
   selector: 'app-task-06',
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
+  imports: [UserDetailsComponent],
 })
 export class Task06Component implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly subscriptions = new Subscription();
 
   protected users: WorkshopUser[] = [];
@@ -37,7 +39,7 @@ export class Task06Component implements OnInit, OnDestroy {
         this.visibleUsers = [...this.activeUsers];
         this.selectedUser = this.activeUsers[0];
         this.loading = false;
-        this.cdr.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }),
     );
   }
@@ -57,10 +59,13 @@ export class Task06Component implements OnInit, OnDestroy {
     );
   }
 
-  protected toggleSelectedStatus(): void {
-    if (!this.selectedUser) return;
+  protected toggleUserStatus(userId: number): void {
+    const user = this.users.find((candidate) => candidate.id === userId);
+    if (!user) {
+      return;
+    }
 
-    this.selectedUser.active = !this.selectedUser.active;
-    this.cdr.detectChanges();
+    user.active = !user.active;
+    this.changeDetectorRef.detectChanges();
   }
 }

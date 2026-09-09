@@ -142,16 +142,17 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     title: 'Diese Komponente modernisieren',
     subtitle: 'Jetzt greifen alle Bausteine ineinander.',
     category: 'Migration',
-    concept: 'Eager → OnPush · Signals + RxJS',
+    concept: 'Eager → OnPush · Signals · input()/output() · RxJS',
     difficulty: 'Anspruchsvoll',
-    estimatedMinutes: '20–30 Min.',
-    filePath: 'src/app/tasks/task-06-modernize/task.component.ts',
+    estimatedMinutes: '30–40 Min.',
+    filePath: 'src/app/tasks/task-06-modernize/',
     problem:
-      'Die durch ng update zunächst auf Eager belassene Komponente mischt Subscriptions, kopierten Zustand, Mutation, manuelles Cleanup und erzwungene Change Detection.',
-    goal: 'Migriere schrittweise auf OnPush: Laden, Auswahl, Suche und abgeleitete Listen bleiben ohne erzwungene Change Detection korrekt.',
+      'Die durch ng update zunächst auf Eager belassenen Parent- und Detail-Komponenten mischen Decorator-Inputs und -Outputs, Subscriptions, kopierten Zustand, Mutation, manuelles Cleanup und erzwungene Change Detection.',
+    goal: 'Migriere Parent und Child auf OnPush sowie Signals: Laden, Auswahl, Suche, Child-Inputs und Status-Output bleiben ohne erzwungene Change Detection korrekt.',
     constraints: [
       'Das Service-Observable bleibt die Async-Grenze.',
-      'Wechsle gezielt von Eager zu OnPush.',
+      'Wechsle Parent und Child gezielt von Eager zu OnPush.',
+      'Migriere @Input und @Output des Childs auf input() und output().',
       'Entferne unnötiges detectChanges() und manuelles Subscription-Cleanup.',
       'Keine duplizierten Collections oder direkte Objektmutation.',
       'ZoneJS bleibt entfernt; teste das Verhalten im DOM.',
@@ -159,10 +160,11 @@ export const WORKSHOP_TASKS: readonly WorkshopTask[] = [
     hints: [
       'Trenne Async-Stream, schreibbaren UI-Zustand und synchrone Ableitungen.',
       'toSignal() oder takeUntilDestroyed() bilden eine saubere RxJS-Grenze; computed() beschreibt gefilterte Views.',
+      'Signal-Inputs werden im Child mit () gelesen; output() stellt weiterhin emit() bereit.',
       'Prüfe bei echten Migrationen außerdem direkte Input-Zuweisungen, NgZone.onStable und Tests, die fehlende Benachrichtigungen mit detectChanges() verdecken.',
     ],
     successExplanation:
-      'OnPush begrenzt den zu prüfenden Teilbaum, Signals melden relevante Änderungen und computed() hält Ableitungen konsistent. RxJS bleibt stark für Streams, Cancellation, Komposition, Debouncing und WebSockets.',
+      'OnPush begrenzt beide Teilbäume, Signals melden relevante Änderungen und computed() hält Ableitungen konsistent. input() und output() bilden die Parent-Child-API signalbasiert ab; RxJS bleibt stark für Streams, Cancellation, Komposition, Debouncing und WebSockets.',
   },
 ];
 

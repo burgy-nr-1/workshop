@@ -40,7 +40,9 @@ export class TaskRunnerComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['component'] && this.host) queueMicrotask(() => this.load());
+    if (changes['component'] && this.host) {
+      queueMicrotask(() => this.load());
+    }
   }
 
   public ngOnDestroy(): void {
@@ -48,7 +50,9 @@ export class TaskRunnerComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   private load(): void {
-    if (!this.host || !this.component || this.loadedComponent === this.component) return;
+    if (!this.host || !this.component || this.loadedComponent === this.component) {
+      return;
+    }
     this.loadedComponent = this.component;
     this.host.clear();
     this.failed.set(false);

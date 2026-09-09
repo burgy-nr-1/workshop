@@ -43,7 +43,9 @@ export class TaskCheckerService {
 
   private async checkTask01(root: HTMLElement): Promise<TaskCheckResult> {
     const save = this.button(root, 'save');
-    if (!save) return this.missingDemo();
+    if (!save) {
+      return this.missingDemo();
+    }
     save.click();
     const status = await this.waitForText(root, 'save-status', 'Änderungen gespeichert');
     return status === 'Änderungen gespeichert'
@@ -57,7 +59,9 @@ export class TaskCheckerService {
   private async checkTask02(root: HTMLElement): Promise<TaskCheckResult> {
     const reset = this.button(root, 'reset');
     const promote = this.button(root, 'promote');
-    if (!reset || !promote) return this.missingDemo();
+    if (!reset || !promote) {
+      return this.missingDemo();
+    }
 
     reset.click();
     const initial = await this.waitForText(root, 'role', 'Benutzer');
@@ -82,7 +86,9 @@ export class TaskCheckerService {
   private async checkTask03(root: HTMLElement): Promise<TaskCheckResult> {
     const increment = this.button(root, 'increment');
     const reset = this.button(root, 'reset');
-    if (!increment || !reset) return this.missingDemo();
+    if (!increment || !reset) {
+      return this.missingDemo();
+    }
 
     reset.click();
     const observed = [await this.waitForText(root, 'count', '0')];
@@ -152,10 +158,13 @@ export class TaskCheckerService {
 
     const search = root.querySelector<HTMLInputElement>('[data-testid="search"]');
     const toggle = this.button(root, 'toggle-active');
-    if (!search || !toggle) return this.missingDemo();
+    if (!search || !toggle) {
+      return this.missingDemo();
+    }
 
     const initial = this.text(root, 'active-count');
     const initialVisibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
+    const initialDetailActiveCount = this.text(root, 'detail-active-count');
 
     search.value = 'Jonas';
     search.dispatchEvent(new Event('input', { bubbles: true }));
@@ -183,15 +192,22 @@ export class TaskCheckerService {
     );
     const visibleUsers = root.querySelectorAll('button[data-testid^="user-"]').length;
     const selectedStatus = await this.waitForText(root, 'selected-status', 'Inaktiv');
+    const detailActiveCount = await this.waitForText(
+      root,
+      'detail-active-count',
+      '2 aktive Personen im Team',
+    );
 
     return initial === '3 aktiv' &&
       initialVisibleUsers === 3 &&
+      initialDetailActiveCount === '3 aktive Personen im Team' &&
       searchResult === 1 &&
       searchFoundJonas &&
       selectedName === 'Jonas Wolf' &&
       afterToggle === '2 aktiv' &&
       visibleUsers === 2 &&
-      selectedStatus === 'Inaktiv'
+      selectedStatus === 'Inaktiv' &&
+      detailActiveCount === '2 aktive Personen im Team'
       ? this.success()
       : this.failure(
           'Mindestens ein Teil des Team-Dashboards bleibt veraltet.',
@@ -199,12 +215,14 @@ export class TaskCheckerService {
           [
             `Ausgangswert: ${initial || 'fehlt'}`,
             `Anfangs sichtbare Personen: ${initialVisibleUsers}`,
+            `Child-Input am Anfang: ${initialDetailActiveCount || 'fehlt'}`,
             `Suchtreffer für Jonas: ${searchResult}`,
             `Jonas gefunden: ${searchFoundJonas ? 'ja' : 'nein'}`,
             `Auswahl: ${selectedName || 'fehlt'}`,
             `Nach Statusänderung: ${afterToggle || 'fehlt'}`,
             `Sichtbare aktive Personen: ${visibleUsers}`,
             `Ausgewählter Status: ${selectedStatus || 'fehlt'}`,
+            `Child-Input nach Output: ${detailActiveCount || 'fehlt'}`,
           ],
         );
   }
@@ -233,11 +251,15 @@ export class TaskCheckerService {
     condition: () => boolean,
     timeoutMilliseconds = 500,
   ): Promise<void> {
-    if (condition()) return Promise.resolve();
+    if (condition()) {
+      return Promise.resolve();
+    }
 
     return new Promise((resolve) => {
       const observer = new MutationObserver(() => {
-        if (!condition()) return;
+        if (!condition()) {
+          return;
+        }
         clearTimeout(timeout);
         observer.disconnect();
         resolve();

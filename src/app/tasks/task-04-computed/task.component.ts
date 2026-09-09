@@ -24,7 +24,9 @@ export class Task04Component {
 
   protected toggle(id: number): void {
     const task = this.tasks().find((task) => task.id === id);
-    if (task) task.completed = !task.completed;
+    if (task) {
+      task.completed = !task.completed;
+    }
   }
 
   protected addTask(): void {

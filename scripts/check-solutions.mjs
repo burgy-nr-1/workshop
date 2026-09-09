@@ -15,8 +15,12 @@ function runAngular(arguments_) {
     stdio: 'inherit',
   });
 
-  if (result.error) throw result.error;
-  if (result.status !== 0) throw new Error(`Angular CLI endete mit Status ${result.status}.`);
+  if (result.error) {
+    throw result.error;
+  }
+  if (result.status !== 0) {
+    throw new Error(`Angular CLI endete mit Status ${result.status}.`);
+  }
 }
 
 try {
@@ -36,7 +40,9 @@ try {
 
   const solutionsRoot = join(repositoryRoot, 'solutions');
   for (const entry of readdirSync(solutionsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory() || !entry.name.startsWith('task-')) continue;
+    if (!entry.isDirectory() || !entry.name.startsWith('task-')) {
+      continue;
+    }
     cpSync(
       join(solutionsRoot, entry.name),
       join(temporaryRoot, 'src', 'app', 'tasks', entry.name),

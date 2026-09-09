@@ -42,26 +42,11 @@
         }
       </div>
       @if (selectedUser(); as selected) {
-        <section class="selected-person" aria-label="Ausgewähltes Teammitglied">
-          <span class="label">Ausgewählt</span>
-          <h4 data-testid="selected-name">{{ selected.name }}</h4>
-          <p>{{ selected.role }}</p>
-          <span
-            class="status-dot"
-            data-testid="selected-status"
-            [class.inactive]="!selected.active"
-          >
-            {{ selected.active ? 'Aktiv' : 'Inaktiv' }}
-          </span>
-          <button
-            class="secondary-button"
-            type="button"
-            data-testid="toggle-active"
-            (click)="toggleSelectedStatus()"
-          >
-            Aktivstatus umschalten
-          </button>
-        </section>
+        <app-user-details
+          [user]="selected"
+          [activeCount]="activeUsers().length"
+          (statusChange)="toggleUserStatus($event)"
+        />
       }
     </div>
   }

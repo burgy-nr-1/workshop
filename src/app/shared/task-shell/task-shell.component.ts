@@ -60,7 +60,9 @@ export class TaskShellComponent {
   }
 
   protected async runCheck(taskId: string): Promise<void> {
-    if (!this.runner) return;
+    if (!this.runner) {
+      return;
+    }
     this.checking.set(true);
     this.result.set(null);
 
@@ -71,7 +73,9 @@ export class TaskShellComponent {
         this.runner.initializationFailed,
       );
       this.result.set(result);
-      if (result.passed) this.progress.markSolved(taskId);
+      if (result.passed) {
+        this.progress.markSolved(taskId);
+      }
     } finally {
       this.checking.set(false);
     }
